@@ -28,40 +28,113 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
  <style>
      table,tr,th,td {
-         border: 1px solid black;
+         border:  solid black;
+
      }
+     #setting-form{
+         border: 2px solid black;
+         display:none;
+         position: absolute;
+         z-index:10;
+         margin-top: 0;
+         padding: 0 10px;
+         background-color:rgb(245,245,245);
+         border-radius:10px;
+     }
+
+     .setting{
+         position:relative;
+
+     }
+
  </style>
+
 </head>
 
 <body>
 <!-- your content here... -->
+
 <div class="container">
-    <div class="row row-no-gutters">
-        <div class="col-sm-3 header" style="width:100%;">
+    <div class="row ">
+        <div th:if="${failed!=null}" class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fas fa-ban"></i> Alert!</h5>
+            <div th:text="${failed}"></div>
+        </div>
+
+        <div th:if="${success!=null}" class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fas fa-check"></i> Alert!</h5>
+            <div th:text="${success}"></div>
+        </div>
+        <div class="col-sm-6" style="width:100%;">
             <h1>File Managements</h1>
         </div>
         <div class="col-sm-2"></div>
-        <div class="col-sm-8">
-            <div class="well well-lg" >
-                <div class="col-sm-4" >
-                    <button type="button" class="btn btn-default" >Setting</button>
-                </div>
+        <div class="col-sm-8 top-header" >
+            <div class="well well-lg"  style="height:100px" >
                 <div class="col-sm-4">
-                    <button type="button" class="btn btn-basic">Chọn tệp</button>
+                    <div class="setting">
+                    <button  class="btn btn-default" id="setting-button">Setting</button>
+                    <form class ="form" id="setting-form">
+
+                                <div class="form-group">
+                                    <label for="exampleFormControlInput1">Max file size (MB)</label>
+                                    <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="enter file size">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleFormControlInput2">Item per page</label>
+                                    <input type="text" class="form-control" id="exampleFormControlInput2" placeholder="enter file size">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleFormControlSelect1">Example select</label>
+                                    <select class="form-control" id="exampleFormControlSelect1">
+                                        <option>Image</option>
+                                        <option>File</option>
+                                        <option>PDF</option>
+                                        <option>Doc</option>
+                                        <option>Mp3</option>
+                                    </select>
+                                </div>
+
+                    </form>
+                    </div>
+
                 </div>
-                <div class="col-sm-4">
-                    <button type="button" class="btn btn-primary">Upload</button>
-                </div>
+
+                <form method="POST" enctype="multipart/form-data" th:action="@{/home/file/upload}" th:object="${file}">
+
+
+
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-basic">Chose file</button>
+                            <input type="file" name="upload_file" class="form-control" placeholder="Select file">
+                        </div>
+                        <div class="col-sm-4">
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                        </div>
+
+
+                    <!-- /.card-body -->
+
+
+                </form>
+
+
+
 
             </div>
             <table class="table table-dark">
 
                 <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
+                    <th scope="col">Index</th>
+                    <th scope="col">File Name</th>
+                    <th scope="col">Version</th>
+                    <th scope="col">File Size</th>
+                    <th scope="col">Create Time</th>
+                    <th scope="col">Download</th>
+                    <th scope="col">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -70,25 +143,64 @@
                     <td>Mark</td>
                     <td>Otto</td>
                     <td>@mdo</td>
+                    <td>Thornton</td>
+                    <td>@fat</td>
+                    <td>
+                        <button type="button" class="btn btn-default">
+                            <span class="glyphicon glyphicon-download-alt"></span>
+                        </button>
+                        <button type="button" class="btn btn-default">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </td>
                 </tr>
                 <tr>
                     <th scope="row">2</th>
                     <td>Jacob</td>
                     <td>Thornton</td>
                     <td>@fat</td>
+                    <td>Thornton</td>
+                    <td>@fat</td>
+                    <td>
+                        <button type="button" class="btn btn-default">
+                            <span class="glyphicon glyphicon-download-alt"></span>
+                        </button>
+                        <button type="button" class="btn btn-default">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </td>
                 </tr>
                 <tr>
                     <th scope="row">3</th>
                     <td>Larry</td>
                     <td>the Bird</td>
                     <td>@twitter</td>
+                    <td>Thornton</td>
+                    <td>@fat</td>
+                    <td>
+                        <button type="button" class="btn btn-default">
+                            <span class="glyphicon glyphicon-download-alt"></span>
+                        </button>
+                        <button type="button" class="btn btn-default">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </td>
                 </tr>
                 </tbody>
 
             </table>
-            <div class="well well-lg">
+            <div class="well well-lg" style="height:100px" >
+             <div class="col-sm-4"> Page 1 of 4</div>
+             <div class="col-sm-6" >
+                 <ul class="pagination">
+                     <li><a href="#">1</a></li>
+                     <li class="active"><a href="#">2</a></li>
+                     <li><a href="#">3</a></li>
+                     <li><a href="#">4</a></li>
+                     <li><a href="#">5</a></li>
+                 </ul>
 
-
+             </div>
             </div>
         </div>
         <div class="col-sm-2"></div>
@@ -97,5 +209,18 @@
 
 
 </div>
+<script>
+    var setting_button = document.getElementById('setting-button');
+    setting_button.onclick = function() {
+        console.log("ok")
+        var div = document.getElementById('setting-form');
+        if (div.style.display !== 'none') {
+            div.style.display = 'none';
+        }
+        else {
+            div.style.display = 'block';
+        }
+    };
+</script>
 </body>
 </html>

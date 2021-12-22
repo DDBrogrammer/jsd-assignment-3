@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
@@ -47,7 +48,30 @@ public class FileService {
     }
 
 
+    public boolean save(com.example.jsd_assignment_3.entities.File file, MultipartFile uploadFile) {
 
+        try {
+            //upload ảnh
+            if (uploadFile != null) {
+                //tiến hành upload
+                String uploadPath = upload(uploadFile);
+                file.setFileSize(uploadFile.getSize());
+                file.setName(uploadFile.getOriginalFilename());
+                file.setStatus("Active");
+                file.setNumberOfDownload(0);
+
+                if (uploadPath != null) {
+                    file.setPath(uploadPath);
+                } else {
+                    return false;
+                }
+            }
+            fileRepository.save(file);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 
 
 
