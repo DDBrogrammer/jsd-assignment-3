@@ -6,7 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Date;
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @Table(name="file")
@@ -27,8 +28,8 @@ private long numberOfDownload;
 private long version;
     @Column(name ="status")
 private String status;
-    @Column(name ="create_date_time")
-private Date createdDateTime;
+    @Column(name ="created_date_time")
+private LocalDateTime createdDateTime;
     @Column(name ="version_ids")
 private String versionIds;
 
