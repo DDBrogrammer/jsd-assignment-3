@@ -5,6 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.Date;
 @Entity
 @Data
@@ -19,7 +20,7 @@ private long itemPerPage;
 @Column(name="mime_type_allowed")
 private String mimeTypeAllowed;
 @Column(name="last_update_time")
-private Date lastUpdatedTime;
+private LocalDateTime lastUpdatedTime;
 
 
 

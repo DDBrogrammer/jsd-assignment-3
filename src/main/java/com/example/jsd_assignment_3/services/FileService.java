@@ -51,25 +51,22 @@ public class FileService {
 
     public File download(long id){
         com.example.jsd_assignment_3.entities.File myFile=fileRepository.getById(id);
-        System.out.println(myFile.getName());
-        System.out.println(myFile.getMime());
-        System.out.println(UPLOAD_FOLDER+ myFile.getPath());
+        myFile.setNumberOfDownload(myFile.getNumberOfDownload()+1);
+        save(myFile);
         File file= new File(UPLOAD_FOLDER+myFile.getPath());
         return file;
     }
 
     public boolean save(com.example.jsd_assignment_3.entities.File file, MultipartFile uploadFile) {
         LocalDateTime localDate = LocalDateTime.now();
-
         try {
             //upload ảnh
-
                 //tiến hành upload
                 String uploadPath = upload(uploadFile);
                 file.setFileSize(uploadFile.getSize());
                 file.setName(uploadFile.getOriginalFilename());
                 file.setCreatedDateTime(localDate);
-                file.setStatus("Active");
+                file.setStatus(1);
                 file.setNumberOfDownload(0);
                 file.setPath(uploadPath);
                 file.setMime(uploadFile.getContentType());
@@ -85,9 +82,17 @@ public class FileService {
         return true;
     }
 
+    public boolean save(com.example.jsd_assignment_3.entities.File file){
+        try {
+            fileRepository.save(file);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
     public Page<com.example.jsd_assignment_3.entities.File> getPageFile(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return fileRepository.findAll(pageable);
+        return fileRepository.findActiveFiles(pageable);
     }
    public List<com.example.jsd_assignment_3.entities.File> getAllFiles(){
        return  fileRepository.findAll();
@@ -95,7 +100,6 @@ public class FileService {
    public long specifyFileVersion(String fileName){
         List<com.example.jsd_assignment_3.entities.File> files=getAllFiles();
         long id=1;
-
         for(com.example.jsd_assignment_3.entities.File f:files){
             System.out.println(f.getName());
             System.out.println(fileName);

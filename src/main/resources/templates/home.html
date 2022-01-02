@@ -77,7 +77,6 @@
                     <div class="setting">
                     <button  class="btn btn-default" id="setting-button">Setting</button>
                     <form class ="form" id="setting-form">
-
                                 <div class="form-group">
                                     <label for="exampleFormControlInput1">Max file size (MB)</label>
                                     <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="enter file size">
@@ -96,18 +95,14 @@
                                         <option>Mp3</option>
                                     </select>
                                 </div>
-
+                        <button type="submit" class="btn btn-primary">Apply</button>
                     </form>
                     </div>
 
                 </div>
 
                 <form method="POST" enctype="multipart/form-data" th:action="@{/home/file/upload}" th:object="${file}">
-
-
-
                         <div class="col-sm-4">
-
                             <input type="file" name="upload_file" class="form-control" placeholder="Select file">
                         </div>
                         <div class="col-sm-4">

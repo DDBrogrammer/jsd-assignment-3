@@ -27,7 +27,7 @@ private long numberOfDownload;
     @Column(name ="version")
 private long version;
     @Column(name ="status")
-private String status;
+private int status;
     @Column(name ="created_date_time")
 private LocalDateTime createdDateTime;
     @Column(name ="version_ids")

@@ -24,6 +24,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.Optional;
 
 @Controller
@@ -56,11 +59,9 @@ public class FileController {
         model.addAttribute("upload_file", file);
         model.addAttribute("setting", setting);
         if (page < 0 || page > totalPage - 1) {
-
             Page<File> listFilePage = fileService.getPageFile(activePage,10);
             model.addAttribute("listFilePage", listFilePage);
             model.addAttribute("activePage", activePage);
-
         } else {
             Page<File> listFilePage = fileService.getPageFile(page,10);
             model.addAttribute("listFilePage", listFilePage);
@@ -70,26 +71,8 @@ public class FileController {
         return "home";
     }
 
-
-//    @RequestMapping(value = "/list/{id}", method = RequestMethod.GET)
-//    public void download(@PathVariable long id, HttpServletResponse response) throws IOException {
-//
-//            java.io.File file = ResourceUtils.getFile("classpath:"+UPLOAD_FOLDER+fileService.getFileById(id).getPath());
-//            File myFile=fileService.getFileById(id);
-//            System.out.printf(myFile.getPath());
-//            byte[] data =FileUtils.readFileToByteArray(file);
-//            // Thiết lập thông tin trả về
-//            response.setContentType(myFile.getMime());
-//            response.setHeader("Content-disposition", "attachment; filename=" + file.getName());
-//            response.setContentLength(data.length);
-//            InputStream inputStream = new BufferedInputStream(new ByteArrayInputStream(data));
-//            FileCopyUtils.copy(inputStream, response.getOutputStream());
-//
-//    }
-
-
     @GetMapping("/list/")
-    public void downloadFile3(HttpServletResponse resonse,
+    public void downloadFile(HttpServletResponse resonse,
                               @RequestParam(name = "id") long id) throws IOException {
         File dbFile= fileService.getFileById(id);
         MediaType mediaType = MediaTypeUtils.getMediaTypeForFileName(this.servletContext, dbFile.getName());
@@ -97,19 +80,13 @@ public class FileController {
         System.out.println("mediaType: " + mediaType);
         System.out.println("run download");
         java.io.File file = fileService.download(id);
-        // Content-Type
-        // application/pdf
         resonse.setContentType(mediaType.getType());
-
         // Content-Disposition
         resonse.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName());
-
         // Content-Length
         resonse.setContentLength((int) file.length());
-
         BufferedInputStream inStream = new BufferedInputStream(new FileInputStream(file));
         BufferedOutputStream outStream = new BufferedOutputStream(resonse.getOutputStream());
-
         byte[] buffer = new byte[1024];
         int bytesRead = 0;
         while ((bytesRead = inStream.read(buffer)) != -1) {
@@ -119,7 +96,25 @@ public class FileController {
         inStream.close();
     }
 
-
+    @GetMapping("/delete")
+    public String delete(@RequestParam(name = "id") long id, RedirectAttributes flashSession) {
+        boolean checkOk=true;
+        try {
+            File deleteFile= fileService.getFileById(id);
+            deleteFile.setStatus(0);
+           fileRepository.save(deleteFile);
+        } catch (Exception e) {
+            System.out.println("cannot download file");
+            e.printStackTrace();
+            checkOk=false;
+        }
+        if (checkOk) {
+            flashSession.addFlashAttribute("success", "Success!");
+        } else {
+            flashSession.addFlashAttribute("failed", "Failed!");
+        }
+        return "redirect:/home/file/list";
+    }
 
 
 
